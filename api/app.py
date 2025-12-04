@@ -1,56 +1,129 @@
 import gradio as gr
-import requests
 import json
+import requests
 
-API_URL = "http://127.0.0.1:8010/predict"
+API_URL = "http://127.0.0.1:8010/predict"   # ustaw swój port
 
-def call_api(rooms, area, locality, property_type, property_subtype):
+# ===============================================================
+# LOAD LOCALITY MAP
+# ===============================================================
+
+LOCALITY_JSON_PATH = "locality_resolved_map_clean.json"
+
+with open(LOCALITY_JSON_PATH, "r", encoding="utf-8") as f:
+    locality_map = json.load(f)
+
+# ===============================================================
+# BUILD HIERARCHICAL STRUCTURE
+# ===============================================================
+
+regions = {}
+for loc, info in locality_map.items():
+    region = info["region"]
+    province = info["province"]
+    municipality = info["municipality"]
+
+    regions.setdefault(region, {})
+    regions[region].setdefault(province, set())
+    regions[region][province].add(municipality)
+
+# Konwersja do list dla dropdownów
+for reg in regions:
+    for prov in regions[reg]:
+        regions[reg][prov] = sorted(list(regions[reg][prov]))
+
+
+# ===============================================================
+# API CALL
+# ===============================================================
+
+def call_api(region, province, municipality, rooms, area, property_type):
+    if not all([region, province, municipality]):
+        return "Select full location hierarchy."
+
     payload = {
         "rooms": rooms,
         "area": area,
-        "locality": locality,
+        "locality": municipality.lower(),   # backend expects lowercase locality
         "property_type": property_type,
-        "property_subtype": property_subtype
+        "property_subtype": property_type
     }
 
     try:
-        r = requests.post(API_URL, json=payload)
+        r = requests.post(API_URL, json=payload, timeout=10)
+        if r.status_code != 200:
+            return f"API error {r.status_code}: {r.text}"
+
         data = r.json()
+        pred = data.get("prediction")
 
-        if data.get("status") != "ok":
-            return f"Error: {data.get('message')}"
-
-        price = data.get("prediction")
-        return f"{price:,.0f} EUR"
+        if isinstance(pred, list):
+            return f"Error: {pred}"
+        return f"Estimated price: {pred:,.0f} EUR"
 
     except Exception as e:
-        return f"API error: {str(e)}"
+        return f"Connection error: {e}"
 
 
-with gr.Blocks() as demo:
-    gr.Markdown("## Immo Eliza Price Prediction")
+# ===============================================================
+# DROPDOWN UPDATE LOGIC
+# ===============================================================
+
+def update_provinces(region):
+    if not region:
+        return gr.update(choices=[], value=None), gr.update(choices=[], value=None)
+    provinces = sorted(list(regions[region].keys()))
+    return gr.update(choices=provinces, value=None), gr.update(choices=[], value=None)
+
+
+def update_municipalities(region, province):
+    if not region or not province:
+        return gr.update(choices=[], value=None)
+    municipalities = regions[region][province]
+    return gr.update(choices=municipalities, value=None)
+
+
+# ===============================================================
+# BUILD UI
+# ===============================================================
+
+with gr.Blocks(title="Immo Eliza Price Predictor") as demo:
+
+    gr.Markdown("## Real Estate Price Prediction")
 
     with gr.Row():
-        rooms = gr.Number(label="Rooms", value=3)
-        area = gr.Number(label="Area (m²)", value=80)
+        region_dd = gr.Dropdown(
+            label="Region", choices=sorted(regions.keys()), value=None
+        )
+        province_dd = gr.Dropdown(label="Province", choices=[], value=None)
+        municipality_dd = gr.Dropdown(label="Municipality", choices=[], value=None)
 
-    locality = gr.Textbox(label="Locality (city name)", value="Brussels")
+    region_dd.change(fn=update_provinces, 
+                     inputs=region_dd, 
+                     outputs=[province_dd, municipality_dd])
 
-    property_type = gr.Dropdown(
+    province_dd.change(fn=update_municipalities,
+                       inputs=[region_dd, province_dd],
+                       outputs=municipality_dd)
+
+    with gr.Row():
+        rooms = gr.Slider(1, 10, step=1, value=3, label="Rooms")
+        area = gr.Slider(20, 600, step=1, value=80, label="Area (m²)")
+
+    property_type = gr.Radio(
         ["apartment", "house"],
-        value="apartment",
-        label="Property Type"
+        label="Property Type",
+        value="apartment"
     )
 
-    property_subtype = gr.Textbox(label="Property Subtype", value="APARTMENT")
+    predict_btn = gr.Button("Predict Price ★")
 
-    out = gr.Textbox(label="Predicted Price", interactive=False)
+    output = gr.Textbox(label="Result")
 
-    btn = gr.Button("Predict")
-    btn.click(
+    predict_btn.click(
         fn=call_api,
-        inputs=[rooms, area, locality, property_type, property_subtype],
-        outputs=out
+        inputs=[region_dd, province_dd, municipality_dd, rooms, area, property_type],
+        outputs=output
     )
 
 demo.launch()
