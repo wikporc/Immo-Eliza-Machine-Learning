@@ -210,3 +210,6 @@ __marimo__/
 /catboost_info
 /Immo-Eliza-Machine-Learning.code-workspace
 /results_all_models_before_optimisation.csv
+/models_optimisation
+/xgb_res_apt.db
+/lgbm_res_apt.db
