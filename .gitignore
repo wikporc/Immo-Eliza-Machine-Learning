@@ -205,3 +205,8 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+/models_before_optimisation
+/datasets
+/catboost_info
+/Immo-Eliza-Machine-Learning.code-workspace
+/results_all_models_before_optimisation.csv
