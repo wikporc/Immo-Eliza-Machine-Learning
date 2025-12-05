@@ -213,3 +213,7 @@ __marimo__/
 /models_optimisation
 /xgb_res_apt.db
 /lgbm_res_apt.db
+/api/app_v2.py
+/generate_belgium_postal_map.py
+/localities_extractor.py
+/region_province_locality_tree.json
