@@ -117,7 +117,7 @@ def predict(data: dict):
         "model_used": out["property_type"]
     }
 
-
+"""
 # ======================================
 # LOCAL TEST
 # ======================================
@@ -132,3 +132,5 @@ if __name__ == "__main__":
         "bathrooms": 2
     }
     print(predict(test))
+
+"""
