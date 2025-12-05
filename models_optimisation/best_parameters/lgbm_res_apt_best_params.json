@@ -1,0 +1,12 @@
+{
+    "learning_rate": 0.14103227639477617,
+    "num_leaves": 227,
+    "feature_fraction": 0.9973538845465474,
+    "bagging_fraction": 0.8368796741478572,
+    "bagging_freq": 6,
+    "min_data_in_leaf": 18,
+    "objective": "regression",
+    "metric": "rmse",
+    "verbosity": -1,
+    "force_col_wise": true
+}

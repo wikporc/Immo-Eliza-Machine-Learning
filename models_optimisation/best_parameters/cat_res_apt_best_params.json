@@ -1,0 +1,12 @@
+{
+    "depth": 7,
+    "learning_rate": 0.09635950492340065,
+    "l2_leaf_reg": 5.047588848436636,
+    "bagging_temperature": 5.1525544673903845,
+    "random_strength": 2.9616449780030965,
+    "iterations": 4740,
+    "objective": "regression",
+    "metric": "rmse",
+    "verbosity": -1,
+    "force_col_wise": true
+}
