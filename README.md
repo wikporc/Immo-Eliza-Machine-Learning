@@ -3,7 +3,7 @@
 
 
 ## Table of Contents
-- [Project purpose](#project-purpose)
+- [Intro](#intro)
 - [Repository structure (key files & notebooks)](#repository-structure-key-files--notebooks)
   - [Data preparation](#data-preparation)
   - [Optimisation](#optimisation)
@@ -16,7 +16,11 @@
 - [Quick usage](#quick-usage)
 - [How to reproduce model optimisation & extract params](#how-to-reproduce-model-optimisation--extract-params)
 - [Notes & pointers](#notes--pointers)
+- [Known bugs](#known-bugs)
 - [Potential future improvements](#potential-future-improvements)
+- [External sources](#external-sources)
+
+
 
 ---
 
@@ -48,7 +52,9 @@ As well as double splits:
 
 I used KMeans to separate the clusters. 
 After some initial training, it was visible that trying to achieve a good modelling for the full dataset was not the way to go. Same goes for the luxury properties. 
-In real-life situation, buying an entire complex is an entirely different situation that would require getting a manual quotation, or a separate modelling. Given the limited timeline, I did not do any further investigation on those properties, and instead I focused on getting good models for residential properties, with separate models for apartments and houses.
+In real-life situation, buying an entire complex is an entirely different situation that would require getting a manual quotation, or a separate modelling. Given the limited timeline, I did not do any further investigation on those properties, and instead I focused on getting good models for residential properties, with separate models for apartments and houses. I used Optuna to get the best working parameters for each of those, 
+
+
 
 I used Gradio to create a simple UI capable of getting the input from the user, sending a request to the API and getting back a predicted price. It is quite simplified as it's a working prototype. I will probably redesign it to a Streamlit-based solution in the future, after some backend changes.
 
@@ -172,3 +178,7 @@ python api/app.py
 
 ### Others:
 - Convert the notebooks into scripts and clean unnecessary duplicating clutter
+
+
+## External sources:
+[Information on postal codes and the corresponding municipalities/provinces were taken from BPOST:](https://www.bpost.be/nl/postcodevalidatie-tool)
