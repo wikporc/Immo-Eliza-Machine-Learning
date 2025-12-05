@@ -5,8 +5,6 @@ import joblib
 from pathlib import Path
 
 
-
-
 FEATURES_APT_JSON = r"models_optimisation\raw_features\raw_features_apt.json"
 FEATURES_HOU_JSON = r"models_optimisation\raw_features\raw_features_house.json"
 
@@ -119,19 +117,3 @@ def predict(data: dict):
         "model_used": out["property_type"]
     }
 
-
-"""# ======================================
-# LOCAL TEST
-# ======================================
-
-if __name__ == "__main__":
-    test = {
-        "rooms": 2,
-        "area": 75,
-        "locality": "Gent",
-        "property_type": "house",
-        "property_subtype": "HOUSE",
-        "bathrooms": 2
-    }
-    print(predict(test))
-"""

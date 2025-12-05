@@ -1,0 +1,11 @@
+{
+    "max_depth": 7,
+    "learning_rate": 0.09618181877071355,
+    "subsample": 0.7063153010977908,
+    "colsample_bytree": 0.7439269432793463,
+    "min_child_weight": 1,
+    "n_estimators": 1891,
+    "objective": "reg:squarederror",
+    "tree_method": "hist",
+    "verbosity": 0
+}
