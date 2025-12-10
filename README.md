@@ -158,6 +158,10 @@ python api/app.py
 ## Known bugs:
 
 - At the moment, the user has to enter the Advanced features tab and press "Save Advanced Inputs", even when they have no intention to provide any advanced inputs. Only when both basic and advanced inputs are saved, the "Predict price" button will result in a price being printed (otherwise no price appears)
+- Data leakage in optimisation.ipynb. To be fixed.
+
+## Changelog:
+- Added a demo comparing ML hyperparameter optimisation using Optuna compared to using GridSearchCV. (optuna_demo.ipynb)
 
 ## Potential future expansions:
 
