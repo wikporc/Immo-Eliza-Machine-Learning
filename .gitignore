@@ -246,3 +246,7 @@ generate_belgium_postal_map.py
 /datasets/train_residential_apartment.csv
 /datasets/train_residential_house.csv
 /datasets/train_residential.csv
+cat_res_apt.db
+study_optuna.db
+/gridsearch_models
+/optuna_demo
